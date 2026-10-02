@@ -104,3 +104,112 @@ fn legacy_chrome_tabs_are_gone() {
     }
     assert!(!page("guide.css").contains(".chrome"), "guide.css: .chrome");
 }
+
+fn engine_rows(html: &str) -> Vec<&str> {
+    let start = html.find("const E=[").expect("homepage: engine metadata");
+    let block = &html[start..];
+    let end = block
+        .find("\n];")
+        .expect("homepage: end of engine metadata");
+    block[..end]
+        .lines()
+        .filter(|l| l.trim_start().starts_with("{n:"))
+        .collect()
+}
+
+fn quoted_after<'a>(row: &'a str, key: &str) -> Option<&'a str> {
+    let rest = &row[row.find(key)? + key.len()..];
+    let rest = rest.strip_prefix('"')?;
+    Some(&rest[..rest.find('"')?])
+}
+
+#[test]
+fn homepage_has_spanner_graph_spotlight() {
+    let html = page("index.html");
+    assert!(
+        html.contains("id=\"spanner-graph-spotlight\""),
+        "spotlight section"
+    );
+    assert!(
+        html.contains("Google Cloud Spanner Graph"),
+        "full product name"
+    );
+    for url in [
+        "https://cloud.google.com/spanner/docs/graph/overview",
+        "https://cloud.google.com/spanner/docs/graph/queries-overview",
+        "https://cloud.google.com/spanner/pricing",
+    ] {
+        assert!(
+            html.contains(&format!("href=\"{url}\"")),
+            "official link {url}"
+        );
+    }
+    assert!(html.contains(">Strong fit<"), "Strong fit heading");
+    assert!(
+        html.contains(">Consider carefully<"),
+        "Consider carefully heading"
+    );
+    let lower = html.to_lowercase();
+    for phrase in ["sponsor", "upgraded", "grade raised", "raised its grade"] {
+        assert!(
+            !lower.contains(phrase),
+            "grade must not change for the event: {phrase}"
+        );
+    }
+}
+
+#[test]
+fn engine_marks_are_local_and_documented() {
+    let html = page("index.html");
+    let readme =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("static/assets/engine-logos/README.md");
+    assert!(readme.is_file(), "engine-logos/README.md");
+    let rows = engine_rows(&html);
+    assert!(rows.len() >= 11, "engine metadata rows: {}", rows.len());
+    for row in rows {
+        assert!(
+            row.contains("initials:\""),
+            "neutral fallback initials: {row}"
+        );
+        if row.contains("logo:null") {
+            continue;
+        }
+        let path = quoted_after(row, "logo:").unwrap_or_else(|| panic!("logo path or null: {row}"));
+        assert!(
+            path.starts_with("/assets/engine-logos/") && !path.contains(".."),
+            "logo below assets/engine-logos: {path}"
+        );
+        let file = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("static")
+            .join(&path[1..]);
+        assert!(file.is_file(), "logo file exists: {path}");
+    }
+    for img in tags(&html, "img") {
+        assert!(!img.contains("src=\"http"), "remote image: {img}");
+    }
+}
+
+#[test]
+fn engine_marks_are_inert() {
+    let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("static/assets/engine-logos");
+    let Ok(entries) = fs::read_dir(&dir) else {
+        panic!("{}: missing", dir.display())
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("svg") {
+            continue;
+        }
+        let svg = fs::read_to_string(&path).unwrap().to_lowercase();
+        for bad in [
+            "<script",
+            "onload=",
+            "onclick=",
+            "href=\"http",
+            "href='http",
+            "url(http",
+        ] {
+            assert!(!svg.contains(bad), "{}: {bad}", path.display());
+        }
+    }
+}
