@@ -364,11 +364,13 @@ function drawHero(){
     el("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y},g);
     const t=el("text",{x:(A.x+B.x)/2,y:(A.y+B.y)/2-3,"text-anchor":"middle"},g);t.textContent=r.toLowerCase();}
   for(const n of G.nodes){const on=d[n.id]!==undefined||pathNodes.has(n.id);
-    const g=el("g",{class:"node"+(on?"":" dim"),tabindex:0,role:"button","aria-label":n.label+(pathNodes.has(n.id)?", on the evidence path":"")},svg);
+    const g=el("g",{class:"node"+(on?"":" dim"),tabindex:0,role:"button","data-id":n.id,"aria-label":n.label+(pathNodes.has(n.id)?", on the evidence path":"")},svg);
     el("circle",{cx:n.x,cy:n.y,r:n.id===heroSel?13:10,fill:pathNodes.has(n.id)?"var(--evidence)":TYPE_COL[n.type]},g);
     if(d[n.id]>0){const b=el("text",{x:n.x,y:n.y+3,"text-anchor":"middle",class:"hopbadge"},g);b.textContent=d[n.id]}
     const t=el("text",{x:n.x,y:n.y+22,"text-anchor":"middle"},g);t.textContent=n.label;
     const pick=()=>{heroSel=n.id;active=null;markScenario(null);drawHero();
+      document.getElementById("exampleResult").hidden=true;
+      svg.querySelector(`[data-id="${n.id}"]`).focus();
       exampleStatus.dataset.state="ready";exampleStatus.textContent=`Exploring from ${n.label}: ${reachText()}. Choose a question to see a decision.`};
     g.addEventListener("click",pick);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick()}});}
 }

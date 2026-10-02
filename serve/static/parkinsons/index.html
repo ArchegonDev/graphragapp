@@ -175,14 +175,16 @@ function render(body) {
   const edges = (body.graph && body.graph.edges) || [];
   const paths = $("#pdPaths");
   paths.replaceChildren();
+  const emptyPath = {reject: "None. Nothing was searched for this question.", error: "None. The request did not complete."};
+  const emptyCite = {reject: "None. No pages were retrieved.", error: "None. The request did not complete."};
   if (edges.length) edges.forEach(e => paths.append(pathItem(e)));
-  else paths.append(el("p", outcome === "reject" ? "None. Nothing was searched for this question." : "None. No retrieved page stated a typed relationship.", "empty"));
+  else paths.append(el("p", emptyPath[outcome] || "None. No retrieved page stated a typed relationship.", "empty"));
 
   const cites = $("#pdCitations");
   cites.replaceChildren();
   const links = (body.citations || []).map(c => sourceLink(c.url, c.title)).filter(Boolean);
   if (links.length) links.forEach(a => { const li = el("li"); li.append(a); cites.append(li); });
-  else cites.append(el("li", outcome === "reject" ? "None. No pages were retrieved." : "No sources came back for this question.", "empty"));
+  else cites.append(el("li", emptyCite[outcome] || "No sources came back for this question.", "empty"));
 
   const tech = $("#pdTech");
   tech.replaceChildren();
