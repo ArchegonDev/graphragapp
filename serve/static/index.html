@@ -67,7 +67,7 @@
     </ol>
     <dl class="defs" style="margin-top:clamp(40px,6vw,72px)">
       <div><dt>Graph</dt><dd>Facts (nodes) and the typed relationships between them (edges), such as <em>John Doe leads Solar Farm Alpha</em>.</dd></div>
-      <div><dt>Graph database</dt><dd>The store that holds a graph and answers questions by following relationships. Neo4j and Spanner Graph are examples. These demonstrations keep a small graph in memory instead.</dd></div>
+      <div><dt>Graph database</dt><dd>The store that holds a graph and answers questions by following relationships. Neo4j and Google Cloud Spanner Graph are examples. These demonstrations keep a small graph in memory instead.</dd></div>
       <div><dt>Jev</dt><dd>The typed decision layer. It decides what an agent may do with the evidence. It is not the database and does not store facts.</dd></div>
     </dl>
   </div>
@@ -189,7 +189,7 @@
     <div class="section-head">
       <span class="eyebrow">Technical guide</span>
       <h2 id="tech-title">For technical advisers: engines, labs and queries.</h2>
-      <p>Graph database grades and costs, runnable retrieval and decision labs, the same query in five dialects, and local-run commands. Covers Neo4j, FalkorDB, Memgraph, Neptune, Spanner Graph, PuppyGraph, Fabric graph, MongoDB Atlas, Cosmos DB and Kuzu.</p>
+      <p>Graph database grades and costs, runnable retrieval and decision labs, the same query in five dialects, and local-run commands. Covers Neo4j, FalkorDB, Memgraph, Amazon Neptune, Spanner Graph, PuppyGraph, Microsoft Fabric Graph, MongoDB Atlas, Azure Cosmos DB and Kuzu.</p>
     </div>
 
     <article id="spanner-graph-spotlight" class="spotlight" aria-labelledby="spanner-title">
@@ -200,7 +200,7 @@
           <h3 id="spanner-title">One database. Relational and graph views.</h3>
           <p class="spotlight-lede">Spanner Graph maps Spanner tables or SQL views into a property graph without creating a separate copy of the data. Teams can use GQL for graph patterns, SQL for relational work, and combine both when a decision needs connected and tabular context.</p>
           <ul class="spotlight-claims">
-            <li>A property graph schema is defined declaratively over existing tables or views.</li>
+            <li>Google Cloud describes it as multi-model: a property graph schema is defined declaratively over existing tables or views. It needs the Enterprise or Enterprise Plus edition.</li>
             <li>Graph queries use an ISO GQL-compatible interface.</li>
             <li>GoogleSQL can read graph matches through <code>GRAPH_TABLE</code>, so graph and relational results meet in one query.</li>
             <li>The graph inherits Spanner&rsquo;s scale, availability and strong consistency.</li>
@@ -264,7 +264,7 @@
     </details>
 
     <details class="tech">
-      <summary><span>Entry production cost<small>Approximate monthly list prices in USD, as at 25 September 2026.</small></span></summary>
+      <summary><span>Entry production cost<small>Approximate monthly list prices in USD, as at 25 September 2026; Spanner Graph checked 2 October 2026.</small></span></summary>
       <div class="body">
         <p>The paler bar shows a range. Duplication and sync costs for native stores are not included, and are often the larger number.</p>
         <div class="panel chart" id="costChart"></div>
@@ -338,8 +338,8 @@
 
     <div style="margin-top:clamp(40px,6vw,64px)">
       <h3>Sources and caveats</h3>
-      <p class="annotation">Prices are vendor list prices checked on 25 September 2026 and change often; confirm with each vendor's calculator before quoting to a client. Memgraph was checked on 30 September 2026. Performance claims for PuppyGraph, FalkorDB and Jev are vendor-reported. Kuzu was archived in October 2025; the forks named here are community-maintained. Grades are the author's judgement against the stated weights.</p>
-      <p class="annotation">Vendor pages: <a href="https://neo4j.com/pricing/">Neo4j</a>, <a href="https://www.falkordb.com/plans/">FalkorDB</a>, <a href="https://memgraph.com/pricing">Memgraph</a> (<a href="https://github.com/memgraph/memgraph/blob/master/licenses/BSL.txt">Community licence</a>: BSL 1.1, production use for internal purposes, no database-as-a-service; each version becomes Apache 2.0 on the change date in its licence, at most four years after its release), <a href="https://aws.amazon.com/neptune/pricing/">Neptune</a>, <a href="https://cloud.google.com/spanner/pricing">Spanner</a>, <a href="https://www.puppygraph.com/pricing">PuppyGraph</a>, <a href="https://learn.microsoft.com/en-us/fabric/graph/overview">Fabric graph</a>, <a href="https://www.mongodb.com/pricing">MongoDB</a>, <a href="https://www.puppygraph.com/blog/what-is-kuzudb">Kuzu status</a>.</p>
+      <p class="annotation">Prices are vendor list prices checked on 25 September 2026 and change often; confirm with each vendor's calculator before quoting to a client. Memgraph was checked on 30 September 2026. Spanner Graph was checked on 2 October 2026: Enterprise edition in us-central1 is $0.41 per replica hour, three replicas per regional node, so $1.23 per node hour; over 730 hours that is about $90 for 100 processing units and $898 for one node, before storage, backups and network. Performance claims for PuppyGraph, FalkorDB and Jev are vendor-reported. Kuzu was archived in October 2025; the forks named here are community-maintained. Grades are the author's judgement against the stated weights.</p>
+      <p class="annotation">Vendor pages: <a href="https://neo4j.com/pricing/">Neo4j</a>, <a href="https://www.falkordb.com/plans/">FalkorDB</a>, <a href="https://memgraph.com/pricing">Memgraph</a> (<a href="https://github.com/memgraph/memgraph/blob/master/licenses/BSL.txt">Community licence</a>: BSL 1.1, production use for internal purposes, no database-as-a-service; each version becomes Apache 2.0 on the change date in its licence, at most four years after its release), <a href="https://aws.amazon.com/neptune/pricing/">Neptune</a>, <a href="https://cloud.google.com/spanner/pricing">Spanner pricing</a> (capabilities: <a href="https://cloud.google.com/spanner/docs/graph/overview">Spanner Graph overview</a>, <a href="https://cloud.google.com/spanner/docs/graph/queries-overview">graph queries</a>, <a href="https://cloud.google.com/discover/what-is-a-graph-database">what is a graph database</a>), <a href="https://www.puppygraph.com/pricing">PuppyGraph</a>, <a href="https://learn.microsoft.com/en-us/fabric/graph/overview">Fabric graph</a>, <a href="https://www.mongodb.com/pricing">MongoDB</a>, <a href="https://www.puppygraph.com/blog/what-is-kuzudb">Kuzu status</a>.</p>
     </div>
   </div>
 </section>
@@ -451,7 +451,7 @@ const E=[
  {n:"FalkorDB",logo:"/assets/engine-logos/falkordb.png",initials:"FK",cat:"native",shared:"B+",embed:"B",d:4,o:3,c:4,v:3,cost:350,note:"Pro, 8 GB with HA"},
  {n:"Memgraph",logo:"/assets/engine-logos/memgraph.svg",initials:"MG",cat:"native",shared:"B",embed:null,d:4,o:3,c:3,v:3,cost:null,note:"Community free for internal use (BSL); Enterprise on request; Cloud priced by calculator"},
  {n:"Neptune",displayName:"Amazon Neptune",logo:null,initials:"AN",cat:"native",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:460,note:"Two db.r6g.large, before storage and I/O"},
- {n:"Spanner Graph",displayName:"Google Cloud Spanner Graph",logo:"/assets/engine-logos/google-cloud-spanner.svg",initials:"SG",featured:true,cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:120,hi:1200,note:"Enterprise edition, 0.1 to 1 node"},
+ {n:"Spanner Graph",displayName:"Google Cloud Spanner Graph",logo:"/assets/engine-logos/google-cloud-spanner.svg",initials:"SG",featured:true,cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:90,hi:898,note:"Enterprise edition, us-central1, 100 processing units to 1 node; compute only"},
  {n:"PuppyGraph",logo:"/assets/engine-logos/puppygraph.svg",initials:"PG",cat:"over",shared:"B",prov:true,embed:null,d:4,o:3,c:4,v:3,cost:null,note:"Priced on server CPU and memory; quote only"},
  {n:"Fabric graph",displayName:"Microsoft Fabric Graph",logo:"/assets/engine-logos/microsoft-fabric.svg",initials:"FG",cat:"over",shared:"C+",embed:null,d:3,o:3,c:3,v:4,cost:1300,note:"Always on, pay-as-you-go estimate"},
  {n:"MongoDB Atlas",logo:"/assets/engine-logos/mongodb.svg",initials:"MA",cat:"doc",shared:"C",embed:null,d:2,o:5,c:4,v:5,cost:394,note:"M30 cluster"},
