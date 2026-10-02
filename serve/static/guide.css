@@ -215,6 +215,7 @@ button{cursor:pointer}
 @media (min-width:960px){.page-hero .wrap{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}}
 .page-hero h1{font-size:clamp(2.4rem,6vw,4.8rem);max-width:14ch}
 .page-hero .lede{margin:24px 0 0}
+.page-hero .boundary{margin-top:28px}
 .page-art{background:var(--paper);border:1px solid var(--rule)}
 .brief{display:grid;gap:0;margin:0;max-width:none}
 @media (min-width:860px){.brief{grid-template-columns:repeat(4,minmax(0,1fr))}}
