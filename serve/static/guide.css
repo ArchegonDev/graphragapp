@@ -231,13 +231,13 @@ button{cursor:pointer}
 
 /* Small-world reach */
 .reach{list-style:none;margin:0;padding:0;display:grid;gap:0;max-width:none}
-.reach li{display:grid;gap:8px 24px;padding:22px 0;border-top:1px solid var(--line);align-items:center}
+.reach li{display:grid;gap:8px 24px;padding:22px 14px;border-top:1px solid var(--line);align-items:center}
 @media (min-width:760px){.reach li{grid-template-columns:120px minmax(0,1fr) 220px}}
 .reach .hop{font:700 1.6rem/1 var(--sans);letter-spacing:-.03em}
 .reach .meter{height:18px;background:var(--paper);position:relative}
 .reach .meter span{position:absolute;inset:0 auto 0 0;background:var(--c,var(--purple))}
 .reach .what{font-size:var(--small)}
-.reach li[aria-current="true"]{background:var(--purple-wash);padding-left:14px;padding-right:14px;border-top-color:var(--purple)}
+.reach li[aria-current="true"]{background:var(--purple-wash);border-top-color:var(--purple)}
 
 /* Technical disclosures */
 details.tech{border-top:1px solid var(--rule);padding:0;margin:0}
