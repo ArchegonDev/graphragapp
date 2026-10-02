@@ -51,10 +51,11 @@ code,pre,textarea,kbd{font-family:var(--mono);font-size:.86em}
 .site-nav .cta{margin-left:10px;background:var(--black);color:var(--white);border:0;padding:11px 18px;font-weight:600}
 .site-nav .cta:hover{background:var(--purple-deep);color:var(--white)}
 @media (max-width:820px){
-  .site-header .in{flex-wrap:wrap;gap:0;padding-top:10px}
+  .site-header .in{position:relative;flex-wrap:wrap;gap:0;padding-top:10px}
+  .brand{min-height:44px;margin-bottom:8px}
   .site-nav{margin:0 calc(var(--gutter)*-1);padding:0 var(--gutter);width:calc(100% + var(--gutter)*2);border-top:1px solid var(--line)}
   .site-nav a{padding:12px 10px;min-height:44px}
-  .site-nav .cta{margin-left:auto}
+  .site-nav .cta{position:absolute;top:10px;right:var(--gutter);margin:0;padding:0 16px;display:flex;align-items:center}
 }
 
 /* Page frame */
@@ -267,7 +268,7 @@ details.inline pre{margin-top:10px}
 .lab button,.controls button,.tabs button{border:1.5px solid var(--black);background:var(--white);border-radius:var(--r-sm);padding:8px 14px;font-size:.92rem;font-weight:600}
 .lab button.primary,.controls button.primary{background:var(--purple);border-color:var(--purple);color:var(--white)}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 0}
-button[aria-pressed="true"]{background:var(--black);color:var(--white);border-color:var(--black)}
+.lab button[aria-pressed="true"],.controls button[aria-pressed="true"],.tabs button[aria-pressed="true"]{background:var(--black);color:var(--white);border-color:var(--black)}
 input[type=range]{width:180px;accent-color:var(--purple)}
 .lab textarea{width:100%;min-height:220px;background:var(--code);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px;line-height:1.45;tab-size:2}
 .lab details{margin:12px 0}
