@@ -49,7 +49,8 @@ Retrieved on 2 October 2026.
   published artwork, used only to identify that vendor's product in a comparison, with the
   name always visible.
 - **Preparation.** Only non-visual changes were made. The Adobe Illustrator generator
-  comments were removed from `memgraph.svg` and `google-cloud-spanner.svg`. The Fabric
+  comments were removed from `memgraph.svg` and `google-cloud-spanner.svg`, and trailing
+  whitespace was trimmed from `memgraph.svg` and `neo4j.svg`. The Fabric
   icon had `width="48" height="48"` but no `viewBox`, so `viewBox="0 0 48 48"` was added,
   matching its own canvas, so it scales inside a fixed slot. No paths, colours, or
   proportions were changed. No file contains scripts, event handlers, or remote
