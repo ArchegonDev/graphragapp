@@ -447,19 +447,27 @@ choose("leads");
 /* ---------- Engine data ---------- */
 const GV={"A":4,"A-":3.7,"B+":3.3,"B":3,"B-":2.7,"C+":2.3,"C":2,"C-":1.7,"D":1,"F":0};
 const E=[
- {n:"Neo4j",cat:"native",shared:"A-",embed:null,d:5,o:5,c:2,v:5,cost:4670,note:"Business Critical, 32 GB"},
- {n:"FalkorDB",cat:"native",shared:"B+",embed:"B",d:4,o:3,c:4,v:3,cost:350,note:"Pro, 8 GB with HA"},
- {n:"Memgraph",cat:"native",shared:"B",embed:null,d:4,o:3,c:3,v:3,cost:null,note:"Community free for internal use (BSL); Enterprise on request; Cloud priced by calculator"},
- {n:"Neptune",cat:"native",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:460,note:"Two db.r6g.large, before storage and I/O"},
- {n:"Google Cloud Spanner Graph",cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:120,hi:1200,note:"Enterprise edition, 0.1 to 1 node"},
- {n:"PuppyGraph",cat:"over",shared:"B",prov:true,embed:null,d:4,o:3,c:4,v:3,cost:null,note:"Priced on server CPU and memory; quote only"},
- {n:"Fabric graph",cat:"over",shared:"C+",embed:null,d:3,o:3,c:3,v:4,cost:1300,note:"Always on, pay-as-you-go estimate"},
- {n:"MongoDB Atlas",cat:"doc",shared:"C",embed:null,d:2,o:5,c:4,v:5,cost:394,note:"M30 cluster"},
- {n:"Cosmos DB Gremlin",cat:"doc",shared:"D",embed:null,d:2,o:4,c:2,v:2,cost:null,note:"Throughput-based; depends on load"},
- {n:"Kuzu forks",cat:"embed",shared:null,embed:"B-",d:4,o:1,c:5,v:2,cost:0,note:"Open source; your own compute"},
- {n:"Kuzu 0.11.3",cat:"embed",shared:null,embed:"C",d:4,o:1,c:5,v:0,cost:0,note:"Archived; pin only for existing use"}
+ {n:"Neo4j",logo:"/assets/engine-logos/neo4j.svg",initials:"N4",cat:"native",shared:"A-",embed:null,d:5,o:5,c:2,v:5,cost:4670,note:"Business Critical, 32 GB"},
+ {n:"FalkorDB",logo:"/assets/engine-logos/falkordb.png",initials:"FK",cat:"native",shared:"B+",embed:"B",d:4,o:3,c:4,v:3,cost:350,note:"Pro, 8 GB with HA"},
+ {n:"Memgraph",logo:"/assets/engine-logos/memgraph.svg",initials:"MG",cat:"native",shared:"B",embed:null,d:4,o:3,c:3,v:3,cost:null,note:"Community free for internal use (BSL); Enterprise on request; Cloud priced by calculator"},
+ {n:"Neptune",displayName:"Amazon Neptune",logo:null,initials:"AN",cat:"native",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:460,note:"Two db.r6g.large, before storage and I/O"},
+ {n:"Spanner Graph",displayName:"Google Cloud Spanner Graph",logo:"/assets/engine-logos/google-cloud-spanner.svg",initials:"SG",featured:true,cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:120,hi:1200,note:"Enterprise edition, 0.1 to 1 node"},
+ {n:"PuppyGraph",logo:"/assets/engine-logos/puppygraph.svg",initials:"PG",cat:"over",shared:"B",prov:true,embed:null,d:4,o:3,c:4,v:3,cost:null,note:"Priced on server CPU and memory; quote only"},
+ {n:"Fabric graph",displayName:"Microsoft Fabric Graph",logo:"/assets/engine-logos/microsoft-fabric.svg",initials:"FG",cat:"over",shared:"C+",embed:null,d:3,o:3,c:3,v:4,cost:1300,note:"Always on, pay-as-you-go estimate"},
+ {n:"MongoDB Atlas",logo:"/assets/engine-logos/mongodb.svg",initials:"MA",cat:"doc",shared:"C",embed:null,d:2,o:5,c:4,v:5,cost:394,note:"M30 cluster"},
+ {n:"Cosmos DB Gremlin",displayName:"Azure Cosmos DB for Apache Gremlin",logo:"/assets/engine-logos/azure-cosmos-db.svg",initials:"CD",cat:"doc",shared:"D",embed:null,d:2,o:4,c:2,v:2,cost:null,note:"Throughput-based; depends on load"},
+ {n:"Kuzu forks",logo:null,initials:"KF",cat:"embed",shared:null,embed:"B-",d:4,o:1,c:5,v:2,cost:0,note:"Open source; your own compute"},
+ {n:"Kuzu 0.11.3",logo:null,initials:"KZ",cat:"embed",shared:null,embed:"C",d:4,o:1,c:5,v:0,cost:0,note:"Archived; pin only for existing use"}
 ];
 const CV=c=>`var(--${c})`;
+/* Engine label: fixed mark slot (logo, or monogram when logo is null or fails) plus the visible name. Only trusted static data from E reaches this markup. */
+document.addEventListener("error",ev=>{if(ev.target.matches?.(".emark img"))ev.target.remove()},true);
+function engineLabel(e,pill){
+  const name=e.displayName||e.n;
+  const mark=`<span class="emark" data-initials="${e.initials}" aria-hidden="true">${e.logo?`<img src="${e.logo}" alt="" width="60" height="22" loading="lazy" decoding="async">`:""}</span>`;
+  const label=pill?`<span class="pill" style="--c:${CV(e.cat)}">${name}</span>`:`<span class="ename">${name}</span>`;
+  return `<span class="elabel"${e.featured?' data-featured="true"':""}>${mark}<span class="etext">${label}${e.featured?'<small class="efeature">Featured for this showcase</small>':""}</span></span>`;
+}
 
 /* ---------- Grade chart ---------- */
 let job="shared";
@@ -467,7 +475,7 @@ function drawGrades(){
   const rows=E.filter(e=>e[job]);
   let h='<div class="bars">';
   for(const e of rows){const w=GV[e[job]]/4*72;
-    h+=`<div class="blab">${e.n}</div><div class="track"><div class="bar" style="--c:${CV(e.cat)};width:${Math.max(w,1)}%"></div><span class="val">${e[job]}${e.prov?" (prov.)":""}</span></div>`}
+    h+=`<div class="blab">${engineLabel(e)}</div><div class="track"><div class="bar" style="--c:${CV(e.cat)};width:${Math.max(w,1)}%"></div><span class="val">${e[job]}${e.prov?" (prov.)":""}</span></div>`}
   document.getElementById("gradeChart").innerHTML=h+'</div><p class="note" style="margin:10px 0 0">Scale runs from F to A.</p>';
 }
 document.getElementById("jobShared").onclick=e=>{job="shared";e.target.setAttribute("aria-pressed",true);document.getElementById("jobEmbed").setAttribute("aria-pressed",false);drawGrades()};
@@ -478,7 +486,7 @@ drawGrades();
 (function(){
   const shade=v=>`color-mix(in srgb, var(--native) ${20+v*16}%, var(--paper))`;
   let h=`<thead><tr><th>Engine</th><th>Depth</th><th>Ops</th><th>Cost</th><th>Viability</th><th>Grade</th></tr></thead><tbody>`;
-  for(const e of E){h+=`<tr><td><span class="pill" style="--c:${CV(e.cat)}">${e.n}</span></td>`;
+  for(const e of E){h+=`<tr><td>${engineLabel(e,true)}</td>`;
     for(const k of ["d","o","c","v"]){const v=e[k];h+=`<td class="num" style="background:${shade(v)};color:${v>=3?"#fff":"var(--ink)"}">${v}</td>`}
     h+=`<td>${e.shared?e.shared+(e.prov?" (prov.)":"")+" shared":""}${e.shared&&e.embed?", ":""}${e.embed?e.embed+" embedded":""}</td></tr>`}
   document.getElementById("heat").innerHTML=h+"</tbody>";
@@ -489,7 +497,7 @@ drawGrades();
   const rows=[...E].sort((a,b)=>((b.hi||b.cost)??-1)-((a.hi||a.cost)??-1)),max=5000,pct=v=>v/max*70;
   const fmt=v=>"$"+v.toLocaleString("en-GB");
   let h='<div class="bars">';
-  for(const e of rows){h+=`<div class="blab">${e.n}</div><div class="track">`;
+  for(const e of rows){h+=`<div class="blab">${engineLabel(e)}</div><div class="track">`;
     if(e.cost===null)h+=`<span class="val soft">${e.note}</span>`;
     else if(e.cost===0)h+=`<span class="val soft">$0 licence, own compute</span>`;
     else{h+=`<div class="bar" style="--c:${CV(e.cat)};width:${pct(e.cost)}%"></div>`;
