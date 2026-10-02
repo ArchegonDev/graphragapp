@@ -192,6 +192,56 @@
       <p>Graph database grades and costs, runnable retrieval and decision labs, the same query in five dialects, and local-run commands. Covers Neo4j, FalkorDB, Memgraph, Neptune, Spanner Graph, PuppyGraph, Fabric graph, MongoDB Atlas, Cosmos DB and Kuzu.</p>
     </div>
 
+    <article id="spanner-graph-spotlight" class="spotlight" aria-labelledby="spanner-title">
+      <div class="spotlight-main">
+        <div class="spotlight-copy">
+          <span class="eyebrow">GCP event spotlight</span>
+          <p class="spotlight-product"><img src="/assets/engine-logos/google-cloud-spanner.svg" alt="" width="32" height="32">Google Cloud Spanner Graph</p>
+          <h3 id="spanner-title">One database. Relational and graph views.</h3>
+          <p class="spotlight-lede">Spanner Graph maps Spanner tables or SQL views into a property graph without creating a separate copy of the data. Teams can use GQL for graph patterns, SQL for relational work, and combine both when a decision needs connected and tabular context.</p>
+          <ul class="spotlight-claims">
+            <li>A property graph schema is defined declaratively over existing tables or views.</li>
+            <li>Graph queries use an ISO GQL-compatible interface.</li>
+            <li>GoogleSQL can read graph matches through <code>GRAPH_TABLE</code>, so graph and relational results meet in one query.</li>
+            <li>The graph inherits Spanner&rsquo;s scale, availability and strong consistency.</li>
+          </ul>
+          <p class="annotation">Capabilities are summarised from Google Cloud documentation. The grades and scores below are this site&rsquo;s independent judgement; this spotlight does not change them.</p>
+          <ul class="spotlight-links" aria-label="Google Cloud documentation">
+            <li><a href="https://cloud.google.com/spanner/docs/graph/overview">Spanner Graph overview</a></li>
+            <li><a href="https://cloud.google.com/spanner/docs/graph/schema-overview">Graph schema overview</a></li>
+            <li><a href="https://cloud.google.com/spanner/docs/graph/queries-overview">Graph queries overview</a></li>
+            <li><a href="https://cloud.google.com/spanner/pricing">Spanner pricing</a></li>
+            <li><a href="https://cloud.google.com/discover/what-is-a-graph-database">What is a graph database?</a></li>
+          </ul>
+        </div>
+        <figure class="spotlight-art">
+          <img src="/assets/spanner-graph-architecture.svg" width="480" height="600" loading="lazy" alt="Diagram: Spanner tables and SQL views hold one copy of the data, exposed both as a relational view queried with SQL and as a property graph queried with GQL. Together they give connected context to Jev, which answers, clarifies, sends for review or rejects.">
+        </figure>
+      </div>
+      <div class="spotlight-fit">
+        <section aria-labelledby="spanner-fit">
+          <h4 id="spanner-fit">Strong fit</h4>
+          <ul>
+            <li>Operational data already lives in Spanner.</li>
+            <li>The application needs relational and relationship queries over the same data.</li>
+            <li>Strong consistency and managed multi-region operation matter.</li>
+            <li>The organisation prefers a managed Google Cloud database platform.</li>
+            <li>Graph context should stay next to transactional facts, not in a separately synchronised store.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="spanner-care">
+          <h4 id="spanner-care">Consider carefully</h4>
+          <ul>
+            <li>It is a Google Cloud service, not a portable or embedded database.</li>
+            <li>Cost and capacity follow the Spanner operating model.</li>
+            <li>Validate schema mapping, query shape, latency and traversal depth with representative data.</li>
+            <li>Test the GQL features and graph algorithms you need; do not assume parity with graph-native products.</li>
+            <li>A dedicated graph store may still suit some graph-first workloads better.</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
     <details class="tech" open>
       <summary><span>Engine grades and scores<small>Each engine graded against the job it is built for.</small></span></summary>
       <div class="body">
@@ -401,7 +451,7 @@ const E=[
  {n:"FalkorDB",cat:"native",shared:"B+",embed:"B",d:4,o:3,c:4,v:3,cost:350,note:"Pro, 8 GB with HA"},
  {n:"Memgraph",cat:"native",shared:"B",embed:null,d:4,o:3,c:3,v:3,cost:null,note:"Community free for internal use (BSL); Enterprise on request; Cloud priced by calculator"},
  {n:"Neptune",cat:"native",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:460,note:"Two db.r6g.large, before storage and I/O"},
- {n:"Spanner Graph",cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:120,hi:1200,note:"Enterprise edition, 0.1 to 1 node"},
+ {n:"Google Cloud Spanner Graph",cat:"over",shared:"B",embed:null,d:3,o:5,c:3,v:5,cost:120,hi:1200,note:"Enterprise edition, 0.1 to 1 node"},
  {n:"PuppyGraph",cat:"over",shared:"B",prov:true,embed:null,d:4,o:3,c:4,v:3,cost:null,note:"Priced on server CPU and memory; quote only"},
  {n:"Fabric graph",cat:"over",shared:"C+",embed:null,d:3,o:3,c:3,v:4,cost:1300,note:"Always on, pay-as-you-go estimate"},
  {n:"MongoDB Atlas",cat:"doc",shared:"C",embed:null,d:2,o:5,c:4,v:5,cost:394,note:"M30 cluster"},

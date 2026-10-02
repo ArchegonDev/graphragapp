@@ -259,6 +259,32 @@ details.inline pre{margin-top:10px}
 @media (min-width:860px){.proof li:nth-child(even){padding-left:24px;border-left:1px solid #333}}
 .proof strong{display:block;font-size:1.2rem;margin-bottom:6px;color:var(--white)}
 
+/* Spanner Graph event spotlight: Google blue marks the feature, never a score */
+.spotlight{--gblue:#1a73e8;--gblue-ink:#1558b0;--gblue-wash:#e8f0fe;border-top:4px solid var(--gblue);padding:clamp(28px,4vw,48px) 0 clamp(36px,5vw,56px);margin:0 0 clamp(36px,5vw,56px)}
+.spotlight-main{display:grid;gap:clamp(28px,5vw,64px);align-items:start}
+@media (min-width:960px){.spotlight-main{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}}
+.spotlight .eyebrow{color:var(--gblue-ink)}
+.spotlight-product{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.05rem;margin:0 0 14px}
+.spotlight-product img{width:32px;height:32px;object-fit:contain;flex:none}
+.spotlight h3{font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.03em;line-height:1.04;max-width:16ch;margin:0 0 22px}
+.spotlight-lede{font-size:1.15rem}
+.spotlight-claims{margin:0 0 20px;padding:0;list-style:none}
+.spotlight-claims li{padding:10px 0 10px 18px;border-top:1px solid var(--line);position:relative}
+.spotlight-claims li::before{content:"";position:absolute;left:0;top:1.05em;width:8px;height:8px;background:var(--gblue)}
+.spotlight-links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:18px 0 0;padding:0;list-style:none;font-size:var(--small)}
+.spotlight-links a{color:var(--gblue-ink);font-weight:600}
+.spotlight-links a:hover{color:var(--ink)}
+.spotlight-art{margin:0;background:var(--white);border-left:1px solid var(--rule);padding-left:clamp(0px,3vw,32px)}
+@media (max-width:959px){.spotlight-art{border-left:0;padding-left:0;border-top:1px solid var(--rule);padding-top:24px;max-width:520px}}
+.spotlight-fit{display:grid;gap:0;margin-top:clamp(32px,5vw,56px)}
+@media (min-width:860px){.spotlight-fit{grid-template-columns:1fr 1fr}.spotlight-fit section + section{padding-left:32px;border-left:1px solid var(--line)}}
+.spotlight-fit section{border-top:2px solid var(--rule);padding:20px 24px 0 0}
+.spotlight-fit h4{font:600 var(--tiny)/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px}
+.spotlight-fit section:first-child h4{color:var(--answer)}
+.spotlight-fit section:last-child h4{color:var(--review)}
+.spotlight-fit ul{margin:0;padding-left:1.1em}
+.spotlight-fit li{margin:0 0 8px}
+
 /* Technical guide: labs, charts, tables, snippets */
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:clamp(14px,2vw,22px);min-width:0}
 .lab{margin-top:28px}
