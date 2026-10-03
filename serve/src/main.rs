@@ -16,7 +16,7 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use serde::Deserialize;
 use serde_json::{json, Value};
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::services::ServeDir;
 
 use crate::auth::{error, guard, Limiter};
 use crate::catalogue::Catalogue;
@@ -194,6 +194,10 @@ async fn run_pipeline(
     }
 }
 
+fn static_service(static_dir: &std::path::Path) -> ServeDir {
+    ServeDir::new(static_dir).append_index_html_on_directories(true)
+}
+
 #[tokio::main]
 async fn main() {
     let catalogue_path = PathBuf::from(env_or("CATALOGUE_PATH", "catalogue.json"));
@@ -225,14 +229,13 @@ async fn main() {
         None,
         app.min_confidence,
     );
-    let index = static_dir.join("index.html");
     let router = Router::new()
         .route("/api/health", get(health))
         .route("/api/ready", get(ready))
         .route("/api/catalogue", get(catalogue))
         .route("/api/decide", post(decide))
         .route("/api/pipeline", post(run_pipeline))
-        .fallback_service(ServeDir::new(&static_dir).fallback(ServeFile::new(index)))
+        .fallback_service(static_service(&static_dir))
         .with_state(app);
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     let listener = tokio::net::TcpListener::bind(addr).await.expect("bind");
@@ -243,6 +246,30 @@ async fn main() {
     )
     .await
     .expect("serve");
+}
+
+#[cfg(test)]
+mod static_route_tests {
+    use super::*;
+    use axum::body::Body;
+    use axum::http::Request;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn missing_static_asset_returns_not_found() {
+        let static_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("static");
+        let response = static_service(&static_dir)
+            .oneshot(
+                Request::builder()
+                    .uri("/assets/does-not-exist.svg")
+                    .body(Body::empty())
+                    .expect("request"),
+            )
+            .await
+            .expect("static response");
+
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    }
 }
 
 use axum::response::IntoResponse;
