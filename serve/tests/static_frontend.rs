@@ -213,3 +213,20 @@ fn engine_marks_are_inert() {
         }
     }
 }
+
+#[test]
+fn sticky_header_anchor_offsets_cover_desktop_and_mobile() {
+    let css = page("guide.css");
+    assert!(
+        css.contains("--header-offset:84px"),
+        "desktop header offset token"
+    );
+    assert!(
+        css.contains("@media (max-width:820px){:root{--header-offset:132px}}"),
+        "mobile header offset token"
+    );
+    assert!(
+        css.contains("scroll-padding-top:var(--header-offset)"),
+        "document anchor offset"
+    );
+}
