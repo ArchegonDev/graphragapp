@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DCCEEW catalogue discovery · Graphs + Jev</title>
+<meta name="description" content="A bounded decision over an air-quality catalogue: Jev answers with matching datasets, asks for detail, refuses, or passes the request to a person.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/guide.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="in">
+    <a class="brand" href="/">Graphs + Jev</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#use-cases" aria-current="true">Use cases</a>
+      <a href="/#technical-guide">Technical guide</a>
+      <a class="cta" href="#demo">Try the demo</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="wrap">
+    <div>
+      <nav class="crumb" aria-label="Breadcrumb"><a href="/">Graphs + Jev</a> / <a href="/#use-cases">Use cases</a> / <span aria-current="page">DCCEEW catalogue discovery</span></nav>
+      <p class="eyebrow">Use case · Catalogue discovery</p>
+      <h1 id="page-title">Find the datasets that actually answer the question.</h1>
+      <p class="lede">A demonstration for the Department of Climate Change, Energy, the Environment and Water (DCCEEW). Someone asks for air-quality or emissions data in plain English. The graph links what they asked for to the datasets that hold it, and Jev decides whether to answer, ask for detail, refuse, or pass the request to a person.</p>
+    </div>
+    <div class="page-art">
+      <img src="/assets/dcceew-landscape.svg" width="640" height="400" alt="A landscape of monitoring stations under bands of atmosphere. A highlighted path links a pollutant to a place and then to the dataset that measures it.">
+    </div>
+  </div>
+</section>
+
+<section class="band band--tight band--paper" aria-label="Use case summary">
+  <div class="wrap">
+    <dl class="brief">
+      <div><dt>Business question</dt><dd>Which official datasets answer this request?</dd></div>
+      <div><dt>What this proves</dt><dd>Catalogue discovery can be bounded: every request ends in one of five known outcomes.</dd></div>
+      <div><dt>Graph contribution</dt><dd>Links each pollutant to geography, time, breakdown, dataset and source, so coverage is checked rather than guessed.</dd></div>
+      <div><dt>Jev control</dt><dd>Answer, clarify, reject, review or no data. Nothing in between.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band" id="demo" aria-labelledby="demo-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Live demonstration</p>
+      <h2 id="demo-title">Ask the DCCEEW catalogue.</h2>
+      <p class="lede">This calls the running Rust service. Start with an example, or write your own request.</p>
+    </div>
+
+    <div class="demo-grid">
+      <div>
+        <fieldset class="scenarios">
+          <legend>Start with an example</legend>
+          <button type="button" class="scenario" aria-pressed="false" data-q="Annual CO2 for Australia in 2024" data-p=""><strong>Annual CO2 for Australia in 2024</strong><span>A complete request. Expect an answer with matching datasets.</span></button>
+          <button type="button" class="scenario" aria-pressed="false" data-q="Particulate matter by region" data-p="official sources only"><strong>Particulate matter by region, official sources only</strong><span>A pollutant group plus a preference. Jev ranks datasets by how well they fit.</span></button>
+          <button type="button" class="scenario" aria-pressed="false" data-q="Emissions" data-p=""><strong>Emissions</strong><span>Too vague to search. Expect Jev to ask for a pollutant and a breakdown.</span></button>
+          <button type="button" class="scenario" aria-pressed="false" data-q="Hourly ozone by street in 1990" data-p=""><strong>Hourly ozone by street in 1990</strong><span>Outside what the catalogue holds. Expect a refusal.</span></button>
+        </fieldset>
+
+        <form id="ask" class="demo" aria-describedby="status">
+          <div class="field">
+            <label for="request">Your request</label>
+            <p class="hint" id="request-hint">Name a pollutant and how you want it broken down, for example by country and year.</p>
+            <textarea id="request" name="request" maxlength="500" required aria-describedby="request-hint">Annual CO2 for Australia in 2024</textarea>
+          </div>
+          <div class="field">
+            <label for="preference">Preference <span class="hint">(optional)</span></label>
+            <p class="hint" id="preference-hint">In plain words, what makes one dataset better than another for you? For example: official sources only.</p>
+            <input id="preference" name="preference" maxlength="300" aria-describedby="preference-hint" placeholder="official sources only">
+          </div>
+          <div class="actions">
+            <button class="btn btn--purple" type="submit" id="submit">Ask Jev</button>
+          </div>
+          <p class="demo-status" id="status" aria-live="polite" data-state="idle">Loading the catalogue…</p>
+        </form>
+
+        <section class="result" id="result" aria-labelledby="result-heading" tabindex="-1" hidden>
+          <h3 class="outcome" id="result-heading"><span id="outcome"></span></h3>
+          <p class="answer" id="answer"></p>
+          <h3>Why Jev decided this</h3>
+          <ul id="why"></ul>
+          <h3>Matched datasets</h3>
+          <ol id="datasets"></ol>
+          <details class="inline">
+            <summary>Technical details</summary>
+            <dl class="facts" id="tech"></dl>
+            <pre id="raw"></pre>
+          </details>
+        </section>
+      </div>
+
+      <aside aria-labelledby="read-title">
+        <h3 id="read-title">How to read the result</h3>
+        <dl class="facts">
+          <div><dt>Answer</dt><dd>The graph found datasets that hold the requested pollutants at the requested breakdown.</dd></div>
+          <div><dt>Clarify</dt><dd>The request is missing a detail Jev needs. It asks rather than guessing.</dd></div>
+          <div><dt>Reject</dt><dd>The catalogue cannot hold what was asked, so Jev stops before searching.</dd></div>
+          <div><dt>Review</dt><dd>A decision fell below the confidence threshold. A person should check it.</dd></div>
+          <div><dt>No data</dt><dd>The request was clear, but no combination of sources covers it.</dd></div>
+        </dl>
+        <p class="boundary boundary--scope"><strong>Scope</strong>A demonstration catalogue of illustrative sources, decided by catalogue rules. No hosted model is called and request text is not logged.</p>
+        <p class="annotation" id="catalogue-summary"></p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/">Back to Graphs + Jev</a> · <a href="/parkinsons/">Parkinson&rsquo;s research evidence</a> · <a href="/little-bunnies/">Small-world context</a></p>
+  </div>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const form = $("#ask"), statusEl = $("#status"), submit = $("#submit"), result = $("#result");
+const OUTCOME_LABEL = {
+  answer: "Answer",
+  clarify: "Clarify: more detail needed",
+  reject: "Reject: outside the catalogue",
+  review: "Review: pass to a person",
+  no_data: "No data",
+  error: "Service unavailable"
+};
+const OUTCOME_WHY = {
+  clarify: "Jev stopped before searching because the request leaves out something it needs.",
+  reject: "Jev stopped before searching: the catalogue holds 2015 to 2025, by region, country or continent, and by month or year.",
+  review: "A decision fell below the acceptance threshold, so the request goes to a person instead of being answered automatically.",
+  no_data: "The request was understood, but no source, alone or combined, covers it."
+};
+
+function setStatus(text, state) { statusEl.textContent = text; statusEl.dataset.state = state; }
+function el(tag, text, cls) { const n = document.createElement(tag); if (text != null) n.textContent = text; if (cls) n.className = cls; return n; }
+function fill(list, items, emptyText) {
+  list.replaceChildren();
+  if (!items.length) { list.append(el("li", emptyText, "empty")); return; }
+  items.forEach(i => list.append(typeof i === "string" ? el("li", i) : i));
+}
+function fact(dl, term, value) {
+  const d = el("div"); d.append(el("dt", term), el("dd", value)); dl.append(d);
+}
+
+fetch("/api/catalogue").then(r => r.json()).then(cat => {
+  $("#catalogue-summary").textContent = cat.summary + " " + cat.sources.length + " sources.";
+  setStatus("Ready. The catalogue is loaded with " + cat.sources.length + " sources.", "idle");
+}).catch(() => setStatus("The catalogue did not load. The demo may still answer; try a request.", "error"));
+
+document.querySelectorAll("[data-q]").forEach(btn => btn.addEventListener("click", () => {
+  document.querySelectorAll("[data-q]").forEach(b => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+  $("#request").value = btn.dataset.q;
+  $("#preference").value = btn.dataset.p;
+  form.requestSubmit();
+}));
+
+function datasetItem(sol) {
+  const li = el("li");
+  const names = (sol.sources || []).map(s => s.name).join(" + ");
+  li.append(el("strong", "Option " + sol.id + ": " + names));
+  const meta = (sol.sources || []).map(s => s.publisher + ", updated " + s.updated).join("; ");
+  li.append(el("div", meta + " · " + sol.cells + (sol.cells === 1 ? " cell" : " cells") + " covered", "annotation"));
+  if (sol.fit && sol.fit.legend) li.append(el("div", "Preference fit: " + sol.fit.legend[sol.fit.top], "annotation"));
+  (sol.notes || []).forEach(n => li.append(el("div", "Caution: " + n, "annotation")));
+  return li;
+}
+
+function render(body) {
+  const outcome = OUTCOME_LABEL[body.outcome] ? body.outcome : "error";
+  result.dataset.outcome = outcome;
+  $("#outcome").textContent = OUTCOME_LABEL[outcome];
+  const lines = body.explanation && body.explanation.text ? body.explanation.text.split("\n").filter(Boolean) : [];
+  $("#answer").textContent = outcome === "answer" ? (lines[0] || "Matching datasets found.") : (body.message || body.detail || "No answer was returned.");
+  const why = outcome === "answer" ? lines.slice(1) : [OUTCOME_WHY[outcome] || "The service could not complete the request."];
+  fill($("#why"), why, "No explanation was returned.");
+  fill($("#datasets"), (body.solutions || []).map(datasetItem), outcome === "answer" ? "No datasets were returned." : "None. Jev returns datasets only when it can stand behind them.");
+  const tech = $("#tech");
+  tech.replaceChildren();
+  if (body.query) {
+    fact(tech, "Pollutants", (body.query.pollutants || []).join(", ") || "none");
+    fact(tech, "Breakdown", Object.entries(body.query.levels || {}).map(([k, v]) => k + ": " + v).join(", ") || "none");
+  }
+  if (body.stages) fact(tech, "Stages run", body.stages.map(s => s.title).join(" → "));
+  if (body.model) fact(tech, "Decided by", body.backend_label + " (" + body.model + "), " + body.residency);
+  if (body.totals) fact(tech, "Decisions", body.totals.decisions + " in " + body.totals.calls + " calls, " + body.totals.wall_ms + " ms");
+  $("#raw").textContent = JSON.stringify(body, null, 2);
+  result.hidden = false;
+  return OUTCOME_LABEL[outcome];
+}
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const request = $("#request").value.trim();
+  const preference = $("#preference").value.trim();
+  submit.disabled = true;
+  form.setAttribute("aria-busy", "true");
+  setStatus("Working: Jev is deciding how to handle the request…", "working");
+  try {
+    let res;
+    try {
+      res = await fetch("/api/pipeline", {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify({backend: "catalogue", request, preference: preference || null})
+      });
+    } catch (e) {
+      render({outcome: "error", detail: "The demo service could not be reached. Check that the Rust server is running, then try again."});
+      setStatus("The request did not reach the service.", "error");
+      return;
+    }
+    let body;
+    try { body = await res.json(); }
+    catch (e) { body = {detail: "The service returned an unexpected response (HTTP " + res.status + ")."}; }
+    if (!res.ok) body = {outcome: "error", detail: body.detail || "The service returned HTTP " + res.status + "."};
+    const label = render(body);
+    setStatus(res.ok ? "Done. Outcome: " + label + "." : "The service could not complete the request.", res.ok ? "done" : "error");
+  } finally {
+    submit.disabled = false;
+    form.removeAttribute("aria-busy");
+  }
+});
+</script>
+</body>
+</html>
